@@ -1,0 +1,69 @@
+body {
+  background-image: url("../img/blurred.jpg");
+  background-size:cover;
+  padding-top: 3.5rem;
+}
+
+.opacy {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.main_title {
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+.main_dashboard {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.h1_dashboard {
+  font-size: 90px;  
+  font-family: bebas;
+}
+
+.side_options {
+  float: right;
+  margin-left: 10px;
+}
+
+.options_list{
+  margin-right: 5px; 
+}
+
+/*
+ * Sidebar
+ */
+
+.sidebar {
+  position: fixed;
+  top: 70px;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  padding: 20px 0;
+  overflow-x: hidden;
+  overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+  border-right: 1px solid #eee;
+}
+
+.sidebar .nav {
+  margin-bottom: 20px;
+}
+
+.sidebar .nav-item {
+  width: 100%;
+}
+
+.sidebar .nav-item + .nav-item {
+  margin-left: 0;
+}
+
+.sidebar .nav-link {
+  border-radius: 0;
+}
+
+@font-face {
+    font-family: bebas;
+    src: url("../fonts/BebasNeue.otf");
+}
