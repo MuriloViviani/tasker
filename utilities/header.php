@@ -6,8 +6,13 @@
                     <a class='navbar-brand' href='#'>
                         <img alt='Brand' src='img/tasker.png'>
                     </a>
-                </div>
-            </div>
+                </div>";
+            if(isset($_SESSION['user'])){
+                echo"<span class='navbar-text'>
+                    Logado como ".$_SESSION['user'].", <a href='utilities/session.php'>SAIR</a>
+                </span>";
+            }
+            echo "</div>
         </nav>
     </header>";
 
@@ -28,7 +33,7 @@
     if($pg_code == 1)
         echo "<a class='nav-link active' href='#'>Gerenciar tarefas<span class='sr-only'>(current)</span></a>";
     else
-        echo "<a class='nav-link' href='manage_task.php'>Gerenciar tarefas</a>";
+        echo "<a class='nav-link' href='new_task.php'>Gerenciar tarefas</a>";
     
     echo "</li> <li class='nav-item'>";
     

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html>
   <head>
     <?php
       $error = false;
@@ -9,13 +9,14 @@
         require_once("utilities/connector.php");
 
         try{
-          $stmt = $conn->prepare("SELECT count(*) as 'count' FROM `user` WHERE `name` = '".$user."' AND `passwd` = '".md5($passwd)."'"); 
+          $stmt = $conn->prepare("SELECT `user_id`, `name` FROM `user` WHERE `name` = '".$user."' AND `passwd` = '".md5($passwd)."'"); 
           $stmt->execute();
           $row = $stmt->fetch();
           
-          if(intval($row['count']) > 0){
+          if($row){
             session_start();
-            $_SESSION['logged'] = true;
+            $_SESSION['user'] = $row['name'];
+            $_SESSION['user_id'] = $row['user_id'];
 
             header('Location: http://localhost/tasker/tasks.php');
           } else {
@@ -70,7 +71,7 @@
                     <span aria-hidden='true'>&times;</span>
                   </button>
                 </div>";
-            }
+              }
             ?>
             <form class="form-horizontal" action="index.php" method="POST">
               <div class="form-group">

@@ -1,27 +1,42 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <?php
-        session_start();
-        if(!isset($_SESSION['logged']))
-            header('Location: http://localhost/tasker/index.php');
-    ?>
-    <title>Tasker</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<html>
+    <head>
+        <?php
+            session_start();
+            if(!isset($_SESSION['user']))
+                header('Location: http://localhost/tasker/index.php');
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+            require_once("utilities/connector.php");
+            if(isset($_REQUEST['taskName'])){
+                try{
+                    $sql = "INSERT INTO task(`name`, `description`, `user_id`) VALUES ('".$_REQUEST['taskName']."', '".$_REQUEST['taskDescription']."', ".$_SESSION['user_id'].")";
 
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/mdb.min.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
-    
-    <script src="js/mdb.min.js"></script>
-  </head>
-  <body>
+                    $stmt = $conn->prepare($sql);
+                    $stmt->execute();
+
+                    $done = true;
+                } catch (PDOException $e){
+                    echo $e;
+                    $error = true;
+                } 
+            }
+        ?>
+        <title>Tasker</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/mdb.min.css" rel="stylesheet">
+        <link href="css/style.css" rel="stylesheet">
+
+        <script src="js/mdb.min.js"></script>
+    </head>
+    <body>
     <?php
         $pg_code = 1;
-        include_once("utilities/header.php"); 
+        include_once("utilities/header.php");
     ?>
         <main role="main" class="col-sm-9 ml-sm-auto col-md-10 pt-3">
             <div class="jumbotron opacy">
@@ -35,15 +50,34 @@
             </div>
 
             <div class="jumbotron animated fadeIn">
+                <?php 
+                    if(isset($done)){
+                        echo "<div class='alert alert-success alert-dismissible fade show' role='alert'>
+                            <strong>Tarefa cadastrada com sucesso</strong>
+                            <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
+                            <span aria-hidden='true'>&times;</span>
+                            </button>
+                        </div>";
+                    } else {
+                        if(isset($error)){
+                            echo "<div class='alert alert-warning alert-dismissible fade show' role='alert'>
+                                <strong>Ocorreu um erro ao cadastrar esta tarefa, por favor tente novamente</strong>
+                                <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
+                                <span aria-hidden='true'>&times;</span>
+                                </button>
+                            </div>";
+                        }
+                    }
+                ?>
                 <h2>Nova tarefa</h2>
-                <form>
+                <form action="new_task.php" method="GET">
                     <div class="form-group">
                         <label for="taskName">Nome da tarefa</label>
-                        <input type="text" class="form-control" id="taskName" placeholder="Nova tarefa">
+                        <input type="text" class="form-control" name="taskName" id="taskName" placeholder="Nova tarefa" required>
                     </div>
                     <div class="form-group">
                         <label for="taskDescription">Descrição da tarefa</label>
-                        <textarea class="form-control" rows="3" id="taskDescription" placeholder="Descrição da tarefa" ></textarea>
+                        <textarea class="form-control" rows="3" name="taskDescription" id="taskDescription" placeholder="Descrição da tarefa" ></textarea>
                     </div>
                     <div class="form-group">
                         <label for="inputFile">Anexos</label>
@@ -59,15 +93,6 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Lorem</td>
-                                    <td>
-                                        <a href="#" id="modal">
-                                            <img src="img/rem.png" alt="Remover" title="Remover tarefa" height="25px" width="25px" >
-                                        </a>
-                                    </td>
-                                </tr>
                                 <tr>
                                     <td>2</td>
                                     <td>Lorem</td>
