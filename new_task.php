@@ -8,11 +8,29 @@
 
             require_once("utilities/connector.php");
             if(isset($_REQUEST['taskName'])){
+                if(isset($_FILES['inputFile'])){
+                    $uploaddir = 'C:\\xampp2\\htdocs\\tasker\\uploads\\';
+                    $uploadfile = $uploaddir . basename($_FILES['inputFile']['name']);
+                    if (move_uploaded_file($_FILES['inputFile']['tmp_name'], $uploadfile)) {
+                        $filepath = $uploadfile;
+                        $filename = basename($_FILES['inputFile']['name']);
+                    }
+                }
+
                 try{
-                    $sql = "INSERT INTO task(`name`, `description`, `user_id`) VALUES ('".$_REQUEST['taskName']."', '".$_REQUEST['taskDescription']."', ".$_SESSION['user_id'].")";
+                    $sql = "INSERT INTO `task`(`name`, `description`, `user_id`) VALUES ('".$_REQUEST['taskName']."', '".$_REQUEST['taskDescription']."', ".$_SESSION['user_id'].")";
 
                     $stmt = $conn->prepare($sql);
                     $stmt->execute();
+
+                    if(isset($filepath)){
+                        $lastid = $conn->lastInsertId();
+
+                        $sql = "INSERT INTO `file`(`name`, `path`, `task_id`) VALUES ('".$filename."', '".$filepath."', ".$lastid.")";
+
+                        $stmt = $conn->prepare($sql);
+                        $stmt->execute();
+                    }
 
                     $done = true;
                 } catch (PDOException $e){
@@ -70,7 +88,7 @@
                     }
                 ?>
                 <h2>Nova tarefa</h2>
-                <form action="new_task.php" method="GET">
+                <form enctype="multipart/form-data" action="new_task.php" method="POST">
                     <div class="form-group">
                         <label for="taskName">Nome da tarefa</label>
                         <input type="text" class="form-control" name="taskName" id="taskName" placeholder="Nova tarefa" required>
@@ -81,29 +99,8 @@
                     </div>
                     <div class="form-group">
                         <label for="inputFile">Anexos</label>
-                        <input type="file" id="inputFile">
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th style="width: 10%">#ID</th>
-                                    <th style="width: 80%">Nome</th>
-                                    <th style="width: 10%">Anexo</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Lorem</td>
-                                    <td>
-                                        <a href="#" id="modal">
-                                            <img src="img/rem.png" alt="Remover" title="Remover tarefa" height="25px" width="25px" >
-                                        </a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <input type="hidden" name="MAX_FILE_SIZE" value="30000" />
+                        <input type="file" id="inputFile" name="inputFile">
                     </div>
                     <button type="submit" class="btn btn-default">Salvar tarefa</button>
                 </form>

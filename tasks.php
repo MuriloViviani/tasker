@@ -5,14 +5,28 @@
         session_start();
         if(!isset($_SESSION['user']))
             header('Location: http://localhost/tasker/index.php');
-            
+        
         require_once("utilities/connector.php");
 
         try{
-            $stmt = $conn->prepare("SELECT * from `task` where `user_id` = '".$_SESSION['user_id']."'"); 
+            if(isset($_REQUEST['DeleteTaskId'])){
+                $sql = "DELETE FROM `task` WHERE `task_id` = '".$_REQUEST['DeleteTaskId']."'";
+
+                $stmt = $conn->prepare($sql);
+                $stmt->execute();
+            }
+        } catch (PDOException  $e){
+            
+        }
+
+        try{
+            $stmt = $conn->prepare("SELECT t.name, t.description, t.task_id, f.name as 'file_name' 
+                FROM `task` as t left join `file` as f 
+                on t.task_id = f.task_id 
+                where t.user_id = '".$_SESSION['user_id']."' order by t.task_id"); 
             $stmt->execute();
-        }catch(PDOException  $e){
-            echo "Error: ".$e;
+        } catch (PDOException  $e){
+            
         }
     ?>
     <title>Tasker</title>
@@ -69,15 +83,15 @@
                                             echo "<td>".$row['task_id']."</td>";
                                             echo "<td>".$row['name']."</td>";
                                             echo "<td>".$row['description']."</td>";
-                                            echo "<td>".$row['description']."</td>";
+                                            echo "<td>".$row['file_name']."</td>";
                                             echo "<td>
                                                 <a data-toggle='modal' class='open-delete_task_dialog' href='#delete_task_dialog' data-task='".$row['task_id']."'>
                                                     <img src='img/rem.png' class='options_list' alt='Remover' title='Remover tarefa' height='25px' width='25px' >
                                                 </a>
-                                                <a href='manage_task.php?task_id=".$row['task_id']."&mode=1'>
+                                                <a href='manage_task.php?task_id=".$row['task_id']."&mode=2'>
                                                     <img src='img/view.png' class='options_list' alt='Visualizar' title='Visualizar tarefa' height='25px' width='25px'>
                                                 </a>
-                                                <a href='manage_task.php?task_id=".$row['task_id']."&mode=2'> 
+                                                <a href='manage_task.php?task_id=".$row['task_id']."&mode=1'> 
                                                     <img src='img/alter.png' class='options_list' alt='Alterar' title='Alterar dados' height='25px' width='25px'>
                                                 </a>
                                             </td>";
@@ -106,7 +120,7 @@
             </div>
             <form action="tasks.php" method="POST">
                 <div class="modal-body">
-                    <h5 id="text_1" name="text_1">Quer mesmo apagar este usuário?</h5>
+                    <h5 id="text_1" name="text_1">Quer mesmo apagar esta tarefa?</h5>
                     <input type="hidden" id="txtTaskId" name="DeleteTaskId" value="">
                 </div>
                 <div class="modal-footer">
