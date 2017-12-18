@@ -8,6 +8,7 @@ This application is made with PHP and it uses MySQL as the database
 
 # Database Specifications
 The Query needed for you to create the database is available in the "database" folder, together with the Entity-Relationship Model that can be found beloy:
+
 ![Database Diagram](https://github.com/MuriloViviani/tasker/blob/master/database/tasker_ERM.jpg)
 
 # Contributing
