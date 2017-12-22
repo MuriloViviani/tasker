@@ -1,4 +1,4 @@
-# tasker
+# ![LOGO](https://github.com/MuriloViviani/tasker/blob/master/img/tasker.png)
 # What is that?
 A simple system of Task Management
 It consists on a simple CRUD for listing, creation, delete, edition and information disposing of tasks that are registered by the user
