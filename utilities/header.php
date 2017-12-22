@@ -42,5 +42,12 @@
     else
         echo "<a class='nav-link' href='user_overview.php'>Usuários</a>";
 
+    echo "</li> <li class='nav-item'>";
+
+    if($pg_code == 3)
+        echo "<a class='nav-link active' href='#'>Gerenciar usuário<span class='sr-only'>(current)</span></a>";
+    else
+        echo "<a class='nav-link' href='new_user.php'>Gerenciar usuário</a>";
+
     echo "</li></ul></nav>";
 ?>

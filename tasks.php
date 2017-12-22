@@ -10,16 +10,16 @@
 
         try{
             if(isset($_REQUEST['DeleteTaskId'])){
+                $sql = "DELETE FROM `file` WHERE `task_id` = '".$_REQUEST['DeleteTaskId']."'";
+                $stmt = $conn->prepare($sql);
+                $stmt->execute();
+
                 $sql = "DELETE FROM `task` WHERE `task_id` = '".$_REQUEST['DeleteTaskId']."'";
 
                 $stmt = $conn->prepare($sql);
                 $stmt->execute();
             }
-        } catch (PDOException  $e){
             
-        }
-
-        try{
             $stmt = $conn->prepare("SELECT t.name, t.description, t.task_id, f.name as 'file_name' 
                 FROM `task` as t left join `file` as f 
                 on t.task_id = f.task_id 
@@ -46,65 +46,65 @@
         $pg_code = 0;
         include_once("utilities/header.php");
     ?>
-        <main role="main" class="col-sm-9 ml-sm-auto col-md-10 pt-3">
-            <div class="jumbotron opacy">
-                <div class="row main_title animated fadeIn">
-                    <div class="col-md-12 main_dashboard">
-                        <center>
-                            <h1 class="h1_dashboard">Dashboard</h1>
-                            <h3>Resumo de todas as tarefas</h3>
-                        </center>
+            <main role="main" class="col-sm-9 ml-sm-auto col-md-10 pt-3">
+                <div class="jumbotron opacy">
+                    <div class="row main_title animated fadeIn">
+                        <div class="col-md-12 main_dashboard">
+                            <center>
+                                <h1 class="h1_dashboard">Dashboard</h1>
+                                <h3>Resumo de todas as tarefas</h3>
+                            </center>
+                        </div>
                     </div>
-                </div>
 
-                <div class="jumbotron animated fadeIn">
-                    <div>
-                        <a href="new_task.php">
-                            <img src="img/add.png" class="side_options" alt="Adicionar" title="Nova Tarefa" height="30px" width="30px" >
-                        </a>
-                        <h2>Tarefas</h2>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th style="width: 10%">#ID</th>
-                                    <th style="width: 20%">Nome</th>
-                                    <th style="width: 40%">Descrição</th>
-                                    <th style="width: 20%">Anexo</th>
-                                    <th style="width: 10%">Opções</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                    if($stmt){
-                                        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                            echo "<tr>";
-                                            echo "<td>".$row['task_id']."</td>";
-                                            echo "<td>".$row['name']."</td>";
-                                            echo "<td>".$row['description']."</td>";
-                                            echo "<td>".$row['file_name']."</td>";
-                                            echo "<td>
-                                                <a data-toggle='modal' class='open-delete_task_dialog' href='#delete_task_dialog' data-task='".$row['task_id']."'>
-                                                    <img src='img/rem.png' class='options_list' alt='Remover' title='Remover tarefa' height='25px' width='25px' >
-                                                </a>
-                                                <a href='manage_task.php?task_id=".$row['task_id']."&mode=2'>
-                                                    <img src='img/view.png' class='options_list' alt='Visualizar' title='Visualizar tarefa' height='25px' width='25px'>
-                                                </a>
-                                                <a href='manage_task.php?task_id=".$row['task_id']."&mode=1'> 
-                                                    <img src='img/alter.png' class='options_list' alt='Alterar' title='Alterar dados' height='25px' width='25px'>
-                                                </a>
-                                            </td>";
-                                            echo "</tr>";
+                    <div class="jumbotron animated fadeIn">
+                        <div>
+                            <a href="new_task.php">
+                                <img src="img/add.png" class="side_options" alt="Adicionar" title="Nova Tarefa" height="30px" width="30px" >
+                            </a>
+                            <h2>Tarefas</h2>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 10%">#ID</th>
+                                        <th style="width: 20%">Nome</th>
+                                        <th style="width: 40%">Descrição</th>
+                                        <th style="width: 20%">Anexo</th>
+                                        <th style="width: 10%">Opções</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                        if($stmt){
+                                            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                                echo "<tr>";
+                                                echo "<td>".$row['task_id']."</td>";
+                                                echo "<td>".$row['name']."</td>";
+                                                echo "<td>".$row['description']."</td>";
+                                                echo "<td>".$row['file_name']."</td>";
+                                                echo "<td>
+                                                    <a data-toggle='modal' class='open-delete_task_dialog' href='#delete_task_dialog' data-task='".$row['task_id']."'>
+                                                        <img src='img/rem.png' class='options_list' alt='Remover' title='Remover tarefa' height='25px' width='25px' >
+                                                    </a>
+                                                    <a href='manage_task.php?task_id=".$row['task_id']."&mode=2'>
+                                                        <img src='img/view.png' class='options_list' alt='Visualizar' title='Visualizar tarefa' height='25px' width='25px'>
+                                                    </a>
+                                                    <a href='manage_task.php?task_id=".$row['task_id']."&mode=1'> 
+                                                        <img src='img/alter.png' class='options_list' alt='Alterar' title='Alterar dados' height='25px' width='25px'>
+                                                    </a>
+                                                </td>";
+                                                echo "</tr>";
+                                            }
                                         }
-                                    }
-                                ?>
-                            </tbody>
-                        </table>
+                                    ?>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </main>
+            </main>
         </div>
     </div>
 

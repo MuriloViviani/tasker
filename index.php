@@ -9,7 +9,7 @@
         require_once("utilities/connector.php");
 
         try{
-          $stmt = $conn->prepare("SELECT `user_id`, `name` FROM `user` WHERE `name` = '".$user."' AND `passwd` = '".md5($passwd)."'"); 
+          $stmt = $conn->prepare("SELECT `user_id`, `name` FROM `user` WHERE `name` = '".$user."' AND `passwd` = '".$passwd."'"); 
           $stmt->execute();
           $row = $stmt->fetch();
           

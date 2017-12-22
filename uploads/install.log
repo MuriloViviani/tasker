@@ -1,8 +1,0 @@
-x64 os
-Windows version: 8.1
-CertMgr.exe MFLD_USB_driver_cert.cer returned 0
-Installing drivers, please wait
-drvinstall.exe intc_usbcomp.inf returned 0
-drvinstall.exe intc_rndis.inf returned 0
-drvinstall.exe intc_cdcserial.inf returned 0
-drvinstall.exe intc_dfu.inf returned 0
